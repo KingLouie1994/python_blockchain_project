@@ -2,11 +2,13 @@
 blockchain = [[1]]
 
 
-def add_value():
-    blockchain.append([blockchain[-1], 5.3])
+# Build Function to add values to the blockchain
+def add_value(transaction_amount):
+    blockchain.append([blockchain[-1], transaction_amount])
     print(blockchain)
 
 
-add_value()
-add_value()
-add_value()
+# Invoke Function
+add_value(2)
+add_value(0.9)
+add_value(10.89)
