@@ -1,5 +1,7 @@
-# Defining our blockchain as a empty list
+# Defining our global variables
 blockchain = []
+open_transactions = []
+owner = 'Luis'
 
 
 # Function to return latest blockchain value
@@ -11,25 +13,35 @@ def get_last_blockchain_value():
 
 
 # Function to add transactions to the blockchain
-def add_transaction(transaction_amount, last_transaction=[1]):
+def add_transaction(sender, recipient, amount=1.0):
     """ Append a new value as well as the last blockchain value to the blockchain
 
     Arguments:
-        :transaction_amount: The amount that should be added.
-        :last_transaction: The last blockchain transaction (default [1]).
+        :sender: The sender of the coins
+        :recepient: Recipient of the coins
+        :amount: The amount of coins sent with the transaction (Default: 1.0)
     """
-    if last_transaction == None:
-        last_transaction = [1]
+    transaction = {
+        'sender': sender,
+        'recepient': sender,
+        'amount': amount
+    }
+    open_transactions.append(transaction)
 
-    blockchain.append([last_transaction, transaction_amount])
+
+def mine_block():
+    pass
 
 
 # Function to let the user input the amount of the transaction
 def get_transaction_value():
-    return float(input('Your transaction amount please: '))
-
+    tx_recipient = input('Enter the recipient of the transaction: ')
+    user_input = float(input('Your transaction amount please: '))
+    return tx_recipient, user_input
 
 # Function to receive users choices of inputs
+
+
 def get_user_choice():
     user_input = input("Your choice: ")
     return user_input
@@ -75,8 +87,8 @@ while waiting_for_input:
 
     """ Using conditions to invoke functions depending on users input """
     if user_choice == '1':
-        tx_amount = get_transaction_value()
-        add_transaction(tx_amount, get_last_blockchain_value())
+        tx_data = get_transaction_value()
+        add_transaction(tx_data, get_last_blockchain_value())
     elif user_choice == '2':
         print_blockchain_elements()
     elif user_choice == "h":
