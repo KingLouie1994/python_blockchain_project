@@ -65,7 +65,7 @@ waiting_for_input = True
 while waiting_for_input:
     """ Printing out the different input options """
     print("Please choose!")
-    print("1: Add a new transactio")
+    print("1: Add a new transaction")
     print("2: Output the blockchain transactions")
     print("h: Manipulate the chain")
     print("q: Quit")
