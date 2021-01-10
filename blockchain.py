@@ -190,6 +190,6 @@ while waiting_for_input:
     if not verify_chain():
         print("Invalid blockchain")
         break
-    print(get_balances(owner))
+    print('Balance of {}: {:6.2f}'.format(owner, get_balances(owner)))
 else:
     print("User left!")
