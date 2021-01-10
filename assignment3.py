@@ -1,5 +1,3 @@
-import copy
-
 # Create a list "person" dictionaries with a name, age and list of hobbies for each person. Fill in any data you want.
 persons = [
     {'name': 'Luis', 'age': 26, 'hobbies': ['golf', 'tennis', 'coding']},
@@ -19,11 +17,7 @@ print(old_enough)
 
 
 # Copy the person list such that you can safely edit the name of the first person without changing the original list.
-copied_persons = []
-for person in persons:
-    copied_person = copy.deepcopy(person)
-    copied_persons.append(copied_person)
-
+copied_persons = [person.copy() for person in persons]
 copied_persons[0]['name'] = 'Manolo'
 print(copied_persons[0]['name'])
 print(persons[0]['name'])
