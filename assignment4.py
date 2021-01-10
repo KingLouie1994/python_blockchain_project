@@ -18,6 +18,6 @@ normal_function2(lambda el: el * 2, 1, 2, 3, 4, 5)
 # Format the output of your 'normal' function such that numbers look nice and are centered in a 20 character column
 def normal_function3(fn, *args):
     for arg in args:
-        print('Result: {:^20}'.format(fn(arg)))
+        print('Result: {:^20.2f}'.format(fn(arg)))
 
 normal_function3(lambda el: el * 2, 1, 2, 3, 4, 5)

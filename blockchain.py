@@ -28,7 +28,7 @@ def get_balances(participant):
                       for tx in open_transactions if tx['sender'] == participant]
     tx_sender.append(open_tx_sender)
     amount_sent = functools.reduce(
-        lambda tx_sum, tx_amt: tx_sum + tx_amt[0] if len(tx_amt) > 0 else 0, tx_sender, 0)
+        lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
     # amount_sent = 0
     # for tx in tx_sender:
     #     if len(tx) > 0:
@@ -40,7 +40,7 @@ def get_balances(participant):
     #     if len(tx) > 0:
     #         amount_received += tx[0]
     amount_received = functools.reduce(
-        lambda tx_sum, tx_amt: tx_sum + tx_amt[0] if len(tx_amt) > 0 else 0, tx_recipient, 0)
+        lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
     # Return the total balance
     return amount_received - amount_sent
 
