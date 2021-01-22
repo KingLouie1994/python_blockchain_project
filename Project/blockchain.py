@@ -10,26 +10,19 @@ from hash_util import hash_string_256, hash_block
 
 # Defining our global variables
 MINING_REWARD = 10
-
-genesis_block = {
-    'previous_hash': '',
-    'index': 0,
-    'transactions': [],
-    'proof': 100
-}
-blockchain = [genesis_block]
+blockchain = []
 open_transactions = []
 owner = 'Luis'
 participants = {'Luis'}
 
 
 def load_data():
+    global blockchain
+    global open_transactions
     try:
         with open('blockchain.txt', mode='r') as f:
             # file_content = pickle.loads(f.read())
             file_content = f.readlines()
-            global blockchain
-            global open_transactions
             # blockchain = file_content['chain']
             # open_transactions = file_content['ot']
             blockchain = json.loads(file_content[0][:-1])
@@ -52,11 +45,14 @@ def load_data():
                 updated_transactions.append(updated_transaction)
             open_transactions = updated_transactions
     except IOError:
-        print('File not found!')
-    except ValueError:
-        print('Value error!')
-    except:
-        print('An error appeared!')
+        genesis_block = {
+            'previous_hash': '',
+            'index': 0,
+            'transactions': [],
+            'proof': 100
+        }
+        blockchain = [genesis_block]
+        open_transactions = []
     finally:
         print('Cleanup!')
 
@@ -65,15 +61,18 @@ load_data()
 
 
 def save_data():
-    with open('blockchain.txt', mode='w') as f:
-        f.write(json.dumps(blockchain))
-        f.write('\n')
-        f.write(json.dumps(open_transactions))
-        # save_data = {
-        #     'chain': blockchain,
-        #     'ot': open_transactions
-        # }
-        # f.write(pickle.dumps(save_data))
+    try:
+        with open('blockchain.txt', mode='w') as f:
+            f.write(json.dumps(blockchain))
+            f.write('\n')
+            f.write(json.dumps(open_transactions))
+            # save_data = {
+            #     'chain': blockchain,
+            #     'ot': open_transactions
+            # }
+            # f.write(pickle.dumps(save_data))
+    except IOError:
+        print('Saving failed!')
 
 
 # Function to validate the proof of a block
