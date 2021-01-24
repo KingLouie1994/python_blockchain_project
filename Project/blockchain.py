@@ -225,7 +225,6 @@ while waiting_for_input:
     print("1: Add a new transaction")
     print("2: Mine a new block")
     print("3: Output the blockchain transactions")
-    print("4: Output participants")
     print("q: Quit")
 
     """ Receiving users choice """
@@ -246,8 +245,6 @@ while waiting_for_input:
             save_data()
     elif user_choice == '3':
         print_blockchain_elements()
-    elif user_choice == '4':
-        print(participants)
     elif user_choice == 'q':
         print("Choice registered!")
         waiting_for_input = False

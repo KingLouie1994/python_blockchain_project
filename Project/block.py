@@ -1,6 +1,10 @@
+# Imports from libraries
 from time import time
 
-class Block:
+# Imports from other files
+from printable import Printable
+
+class Block(Printable):
     def __init__(self, index, previous_hash, transactions, proof, timestamp=None):
         self.index = index
         self.previous_hash = previous_hash
