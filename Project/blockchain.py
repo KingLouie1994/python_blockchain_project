@@ -17,10 +17,18 @@ MINING_REWARD = 10
 class Blockchain:
     def __init__(self, hosting_node_id):
         genesis_block = Block(0, '', [], 100, 0)
-        self.__chain = [genesis_block]
+        self.chain = [genesis_block]
         self.__open_transactions = []
         self.load_data()
         self.hosting_node = hosting_node_id
+
+    @property
+    def chain(self):
+        return self.__chain[:]
+
+    @chain.setter
+    def chain(self, val):
+        self.__chain = val
 
     def get_chain(self):
         return self.__chain[:]
@@ -43,7 +51,7 @@ class Blockchain:
                     updated_block = Block(
                         block['index'], block['previous_hash'], converted_tx, block['proof'], block['timestamp'])
                     updated_blockchain.append(updated_block)
-                self.__chain = updated_blockchain
+                self.chain = updated_blockchain
                 open_transactions = json.loads(file_content[1])
                 updated_transactions = []
                 for tx in open_transactions:
@@ -145,7 +153,8 @@ class Blockchain:
         last_block = self.__chain[-1]
         hashed_block = hash_block(last_block)
         proof = self.proof_of_work()
-        reward_transaction = Transaction('MINING', self.hosting_node, MINING_REWARD)
+        reward_transaction = Transaction(
+            'MINING', self.hosting_node, MINING_REWARD)
         copied_transactions = self.__open_transactions[:]
         copied_transactions.append(reward_transaction)
         block = Block(len(self.__chain), hashed_block,

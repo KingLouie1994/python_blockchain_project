@@ -26,7 +26,7 @@ class Node:
 
     def print_blockchain_elements(self):
         print("-" * 50)
-        for block in self.blockchain.get_chain():
+        for block in self.blockchain.chain:
             print("-" * 20)
             print(block)
             print("-" * 20)
@@ -70,7 +70,7 @@ class Node:
                 waiting_for_input = False
             else:
                 print("Please choose one of the existing options")
-            if not Verification.verify_chain(self.blockchain.get_chain()):
+            if not Verification.verify_chain(self.blockchain.chain):
                 print("Invalid blockchain")
                 break
             print('Balance of {}: {:6.2f}'.format(self.id, self.blockchain.get_balances()))
