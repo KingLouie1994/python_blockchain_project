@@ -24,7 +24,7 @@ class Verification:
 
     # Function to verify if the sender has enough coins to make a transaction
     def verify_transaction(self, transaction, get_balances):
-        sender_balance = get_balances(transaction.sender)
+        sender_balance = get_balances()
         return sender_balance >= transaction.amount
 
     # A function that verifies all open transactions
