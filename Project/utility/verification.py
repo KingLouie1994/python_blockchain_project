@@ -1,5 +1,8 @@
+"""Provides verification helper methods"""
+
 # Imports from other files
-from hash_util import hash_string_256, hash_block
+from utility.hash_util import hash_string_256, hash_block
+from wallet import Wallet
 
 class Verification:
     @staticmethod
@@ -26,12 +29,15 @@ class Verification:
 
     # Function to verify if the sender has enough coins to make a transaction
     @staticmethod
-    def verify_transaction(transaction, get_balances):
-        sender_balance = get_balances()
-        return sender_balance >= transaction.amount
+    def verify_transaction(transaction, get_balances, check_funds=True):
+        if check_funds:
+            sender_balance = get_balances()
+            return sender_balance >= transaction.amount and Wallet.verify_transaction(transaction)
+        else:
+            return Wallet.verify_transaction(transaction)
 
     # A function that verifies all open transactions
     @classmethod
     def verify_transactions(cls, open_transactions, get_balances):
-        return all([cls.verify_transaction(tx, get_balances) for tx in open_transactions])
+        return all([cls.verify_transaction(tx, get_balances, False) for tx in open_transactions])
 
