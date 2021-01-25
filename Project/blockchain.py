@@ -13,7 +13,6 @@ from utility.verification import Verification
 # Defining our global variables
 MINING_REWARD = 10
 
-print(__name__)
 
 class Blockchain:
     def __init__(self, hosting_node_id):
@@ -129,18 +128,9 @@ class Blockchain:
     # Function to add transactions to the blockchain
 
     def add_transaction(self, recipient, sender, amount=1.0):
-        """ Append a new value as well as the last blockchain value to the blockchain
-
-        Arguments:
-            :sender: The sender of the coins
-            :recipient: Recipient of the coins
-            :amount: The amount of coins sent with the transaction (Default: 1.0)
-        """
-        # transaction = {
-        #     'sender': sender,
-        #     'recipient': recipient,
-        #     'amount': amount
-        # }
+        """ Append a new value as well as the last blockchain value to the blockchain """
+        if self.hosting_node == None:
+            return False
         transaction = Transaction(sender, recipient, amount)
         if Verification.verify_transaction(transaction, self.get_balances):
             self.__open_transactions.append(transaction)
@@ -151,6 +141,8 @@ class Blockchain:
     # Function to mine a new block
 
     def mine_block(self):
+        if self.hosting_node == None:
+            return False
         last_block = self.__chain[-1]
         hashed_block = hash_block(last_block)
         proof = self.proof_of_work()
