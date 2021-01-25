@@ -57,7 +57,9 @@ class Node:
             if user_choice == '1':
                 tx_data = self.get_transaction_value()
                 recipient, amount = tx_data
-                if self.blockchain.add_transaction(recipient, self.wallet.private_key, amount=amount):
+                signature = self.wallet.sign_transaction(
+                    self.wallet.public_key, recipient, amount)
+                if self.blockchain.add_transaction(recipient, self.wallet.private_key, signature, amount=amount):
                     print('Added transaction!')
                 else:
                     print('Transaction failed!')
