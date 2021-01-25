@@ -77,6 +77,6 @@ class Node:
         else:
             print("User left!")
 
-
-node = Node()
-node.liste_for_input()
+if __name__ == '__main__':
+    node = Node()
+    node.liste_for_input()

@@ -1,3 +1,5 @@
+"""Provides verification helper methods"""
+
 # Imports from other files
 from utility.hash_util import hash_string_256, hash_block
 
