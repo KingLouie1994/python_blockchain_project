@@ -3,7 +3,7 @@ from uuid import uuid4
 
 # Imports from other files
 from blockchain import Blockchain
-from verification import Verification
+from utility.verification import Verification
 
 class Node:
     def __init__(self):

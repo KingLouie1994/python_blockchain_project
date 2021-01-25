@@ -2,7 +2,7 @@
 from time import time
 
 # Imports from other files
-from printable import Printable
+from utility.printable import Printable
 
 class Block(Printable):
     def __init__(self, index, previous_hash, transactions, proof, timestamp=None):

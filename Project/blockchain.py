@@ -5,10 +5,10 @@ import json
 import pickle
 
 # Imports from other files
-from hash_util import hash_block
+from utility.hash_util import hash_block
 from block import Block
 from transaction import Transaction
-from verification import Verification
+from utility.verification import Verification
 
 # Defining our global variables
 MINING_REWARD = 10

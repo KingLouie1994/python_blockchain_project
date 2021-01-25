@@ -2,7 +2,7 @@
 from collections import OrderedDict
 
 # Imports from other files
-from printable import Printable
+from utility.printable import Printable
 
 
 class Transaction(Printable):
