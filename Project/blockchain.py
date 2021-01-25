@@ -3,6 +3,7 @@ import functools
 import hashlib as hl
 import json
 import pickle
+from functools import reduce
 
 # Imports from other files
 from utility.hash_util import hash_block
@@ -30,9 +31,6 @@ class Blockchain:
     @chain.setter
     def chain(self, val):
         self.__chain = val
-
-    def get_chain(self):
-        return self.__chain[:]
 
     def get_open_transactions(self):
         return self.__open_transactions[:]
@@ -82,8 +80,6 @@ class Blockchain:
         except IOError:
             print('Saving failed!')
 
-    # Function to return if the proof is correct
-
     def proof_of_work(self):
         last_block = self.__chain[-1]
         last_hash = hash_block(last_block)
@@ -92,8 +88,6 @@ class Blockchain:
             proof += 1
         return proof
 
-    # Function to receive balance of a participant of the blockchain
-
     def get_balances(self):
         participant = self.hosting_node
         tx_sender = [[tx.amount for tx in block.transactions
@@ -101,24 +95,14 @@ class Blockchain:
         open_tx_sender = [tx.amount
                           for tx in self.__open_transactions if tx.sender == participant]
         tx_sender.append(open_tx_sender)
-        amount_sent = functools.reduce(
-            lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
-        # amount_sent = 0
-        # for tx in tx_sender:
-        #     if len(tx) > 0:
-        #         amount_sent += tx[0]
+        amount_sent = reduce(lambda tx_sum, tx_amt: tx_sum + sum(tx_amt)
+                             if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
         tx_recipient = [[tx.amount for tx in block.transactions
                          if tx.recipient == participant] for block in self.__chain]
-        # amount_received = 0
-        # for tx in tx_recipient:
-        #     if len(tx) > 0:
-        #         amount_received += tx[0]
-        amount_received = functools.reduce(
-            lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
+        amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(tx_amt)
+                                 if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
         # Return the total balance
         return amount_received - amount_sent
-
-    # Function to return latest blockchain value
 
     def get_last_blockchain_value(self):
         """ Returns the last value of the current blockchain. """
@@ -126,10 +110,7 @@ class Blockchain:
             return None
         return self.__chain[-1]
 
-    # Function to add transactions to the blockchain
-
     def add_transaction(self, recipient, sender, signature, amount=1.0):
-        """ Append a new value as well as the last blockchain value to the blockchain """
         if self.hosting_node == None:
             return False
         transaction = Transaction(sender, recipient, signature, amount)
@@ -138,8 +119,6 @@ class Blockchain:
             self.save_data()
             return True
         return False
-
-    # Function to mine a new block
 
     def mine_block(self):
         if self.hosting_node == None:
@@ -156,7 +135,6 @@ class Blockchain:
         copied_transactions.append(reward_transaction)
         block = Block(len(self.__chain), hashed_block,
                       copied_transactions, proof)
-
         self.__chain.append(block)
         self.__open_transactions = []
         self.save_data()
