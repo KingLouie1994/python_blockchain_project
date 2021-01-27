@@ -21,9 +21,9 @@ class Blockchain:
         genesis_block = Block(0, '', [], 100, 0)
         self.chain = [genesis_block]
         self.__open_transactions = []
-        self.load_data()
         self.hosting_node = hosting_node_id
         self.__peer_nodes = set()
+        self.load_data()
 
     @property
     def chain(self):
@@ -154,3 +154,6 @@ class Blockchain:
     def remove_peer_node(self, node):
         self.__peer_nodes.discard(node)
         self.save_data()
+
+    def get_peer_nodes(self):
+        return list(self.__peer_nodes)[:]
