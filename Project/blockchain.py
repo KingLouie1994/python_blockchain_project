@@ -16,8 +16,11 @@ from wallet import Wallet
 # Defining our global variables
 MINING_REWARD = 10
 
+"""All major funtions and definition of the blockchain"""
+
 
 class Blockchain:
+    # Define Blockchain
     def __init__(self, public_key, node_id):
         genesis_block = Block(0, '', [], 100, 0)
         self.chain = [genesis_block]
@@ -36,16 +39,15 @@ class Blockchain:
     def chain(self, val):
         self.__chain = val
 
+    # Function to return all open transactions
     def get_open_transactions(self):
         return self.__open_transactions[:]
 
+    # Function to load all the data about blocks and transactions from file
     def load_data(self):
         try:
             with open('blockchain-{}.txt'.format(self.node_id), mode='r') as f:
-                # file_content = pickle.loads(f.read())
                 file_content = f.readlines()
-                # blockchain = file_content['chain']
-                # open_transactions = file_content['ot']
                 blockchain = json.loads(file_content[0][:-1])
                 updated_blockchain = []
                 for block in blockchain:
@@ -69,6 +71,7 @@ class Blockchain:
         finally:
             print('Cleanup!')
 
+    # Function to save all the data about blocks and transactions to file
     def save_data(self):
         try:
             with open('blockchain-{}.txt'.format(self.node_id), mode='w') as f:
@@ -80,14 +83,10 @@ class Blockchain:
                 f.write(json.dumps(saveable_tx))
                 f.write('\n')
                 f.write(json.dumps(list(self.__peer_nodes)))
-                # save_data = {
-                #     'chain': blockchain,
-                #     'ot': open_transactions
-                # }
-                # f.write(pickle.dumps(save_data))
         except IOError:
             print('Saving failed!')
 
+    # Function to proof if chain is has been corrupted
     def proof_of_work(self):
         last_block = self.__chain[-1]
         last_hash = hash_block(last_block)
@@ -96,6 +95,7 @@ class Blockchain:
             proof += 1
         return proof
 
+    # Function to calculate current balance of wallet
     def get_balances(self, sender=None):
         if sender == None:
             if self.public_key == None:
@@ -114,15 +114,15 @@ class Blockchain:
                          if tx.recipient == participant] for block in self.__chain]
         amount_received = reduce(lambda tx_sum, tx_amt: tx_sum + sum(tx_amt)
                                  if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
-        # Return the total balance
         return amount_received - amount_sent
 
+    # Function to return the last value of the current blockchain
     def get_last_blockchain_value(self):
-        """ Returns the last value of the current blockchain. """
         if len(self.__chain) < 1:
             return None
         return self.__chain[-1]
 
+    # Function to add a transaction to open transactions
     def add_transaction(self, recipient, sender, signature, amount=1.0, is_receiving=False):
         transaction = Transaction(sender, recipient, signature, amount)
         if Verification.verify_transaction(transaction, self.get_balances):
@@ -142,6 +142,7 @@ class Blockchain:
             return True
         return False
 
+    # Function to mine a new block
     def mine_block(self):
         if self.public_key == None:
             return None
@@ -175,6 +176,7 @@ class Blockchain:
                 continue
         return block
 
+    # Function to add block to the chain
     def add_block(self, block):
         transactions = [Transaction(
             tx['sender'], tx['recipient'], tx['signature'], tx['amount']) for tx in block['transactions']]
@@ -197,6 +199,7 @@ class Blockchain:
         self.save_data()
         return True
 
+    # Function to detect the right blockchain and replace the wrong one with this one  
     def resolve(self):
         winner_chain = self.chain
         replace = False
@@ -207,7 +210,7 @@ class Blockchain:
                 node_chain = respone.json()
                 node_chain = [Block(block['index'], block['previous_hash'], [Transaction(
                     tx['sender'], tx['recipient'], tx['signature'], tx['amount']) for tx in block['transactions']],
-                                    block['proof'], block['timestamp']) for block in node_chain]
+                    block['proof'], block['timestamp']) for block in node_chain]
                 node_chain_length = len(node_chain)
                 local_chain_length = len(self.chain)
                 if node_chain_length > local_chain_length and Verification.verify_chain(node_chain):
@@ -222,13 +225,16 @@ class Blockchain:
         self.save_data()
         return replace
 
+    # Function to add a Node to the network
     def add_peer_node(self, node):
         self.__peer_nodes.add(node)
         self.save_data()
 
+    # Function to remove Node from the network
     def remove_peer_node(self, node):
         self.__peer_nodes.discard(node)
         self.save_data()
 
+    # Function to return all Nodes of the network
     def get_peer_nodes(self):
         return list(self.__peer_nodes)[:]

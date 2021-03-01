@@ -10,17 +10,22 @@ app = Flask(__name__)
 
 CORS(app)
 
+"""Flask REST API"""
 
+
+# Get route to receive node frontend page
 @app.route('/', methods=['GET'])
 def get_node_ui():
     return send_from_directory('ui', 'node.html')
 
 
+# Get route to receive network frontend page
 @app.route('/network', methods=['GET'])
 def get_network_ui():
     return send_from_directory('ui', 'network.html')
 
 
+# Get route to receive the balance of a single user
 @app.route('/balance', methods=['GET'])
 def get_balance():
     balance = blockchain.get_balances()
@@ -38,6 +43,7 @@ def get_balance():
         return jsonify(response), 500
 
 
+# Post route to create a new wallet
 @app.route('/wallet', methods=['POST'])
 def create_keys():
     wallet.create_keys()
@@ -57,6 +63,7 @@ def create_keys():
         return jsonify(response), 500
 
 
+# Get route to receive wallet if it already exists
 @app.route('/wallet', methods=['GET'])
 def load_keys():
     if wallet.load_keys():
@@ -75,6 +82,7 @@ def load_keys():
         return jsonify(response), 500
 
 
+# Post route to create a new transaction
 @app.route('/transaction', methods=['POST'])
 def add_transaction():
     if wallet.public_key == None:
@@ -117,6 +125,7 @@ def add_transaction():
         return jsonify(response), 500
 
 
+# Post route to broadcast transaction from open to a block of the chain
 @app.route('/broadcast-transaction', methods=['POST'])
 def broadcast_transaction():
     values = request.get_json()
@@ -151,6 +160,7 @@ def broadcast_transaction():
         return jsonify(response), 500
 
 
+# Post route to create a new block containing all open transactions and the mining fee transaction
 @app.route('/broadcast-block', methods=['POST'])
 def broadcast_block():
     values = request.get_json()
@@ -189,6 +199,7 @@ def broadcast_block():
         return jsonify(response), 409
 
 
+# Get route to receive all open transactions
 @app.route('/transactions', methods=['GET'])
 def get_open_transactions():
     transactions = blockchain.get_open_transactions()
@@ -196,6 +207,7 @@ def get_open_transactions():
     return jsonify(dict_transactions), 200
 
 
+# Post route to create a new block
 @app.route('/mine', methods=['POST'])
 def mine():
     if blockchain.resolve_conflicts:
@@ -222,6 +234,7 @@ def mine():
         return jsonify(response), 500
 
 
+# Post route to check which chain is the longest and most accurate and replace local chain when needed
 @app.route('/resolve-conflicts', methods=['POST'])
 def resolve_conflicts():
     replaced = blockchain.resolve()
@@ -232,6 +245,7 @@ def resolve_conflicts():
     return jsonify(response), 200
 
 
+# Get route to receive all blocks of the chain
 @app.route('/chain', methods=['GET'])
 def get_chain():
     chain_snapshot = blockchain.chain
@@ -242,6 +256,7 @@ def get_chain():
     return jsonify(dict_chain), 200
 
 
+# Post route to add a new Node to the network
 @app.route('/node', methods=['POST'])
 def add_node():
     values = request.get_json()
@@ -264,6 +279,7 @@ def add_node():
     return jsonify(response), 201
 
 
+# Delete route to delete a Node from the network
 @app.route('/node/<node_url>', methods=['DELETE'])
 def remove_node(node_url):
     if node_url == '' or node_url == None:
@@ -279,6 +295,7 @@ def remove_node(node_url):
     return jsonify(response), 200
 
 
+# Get route to receive all Nodes in the network
 @app.route('/nodes', methods=['GET'])
 def get_nodes():
     nodes = blockchain.get_peer_nodes()
