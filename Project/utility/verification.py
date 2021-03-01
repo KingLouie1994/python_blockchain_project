@@ -14,7 +14,7 @@ class Verification:
         print(guess_hash)
         return guess_hash[0:2] == '00'
 
-    # A function used to validate if the blockchain is manipulated
+    # Function used to validate if the blockchain is manipulated
     @classmethod
     def verify_chain(cls, blockchain):
         for (index, block) in enumerate(blockchain):
@@ -36,7 +36,7 @@ class Verification:
         else:
             return Wallet.verify_transaction(transaction)
 
-    # A function that verifies all open transactions
+    # Function that verifies all open transactions
     @classmethod
     def verify_transactions(cls, open_transactions, get_balances):
         return all([cls.verify_transaction(tx, get_balances, False) for tx in open_transactions])

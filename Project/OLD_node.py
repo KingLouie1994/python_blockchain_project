@@ -7,6 +7,7 @@ from utility.verification import Verification
 from wallet import Wallet
 
 
+""" This code shows how a Node worked before using Flask and building a real frontend"""
 class Node:
     def __init__(self):
         # self.id = str(uuid4())
